@@ -1,0 +1,190 @@
+.login-gray-layer {
+  height: 80%;
+  animation-name: example;
+  animation-duration: .5s;
+  animation-timing-function: linear;
+}
+
+@keyframes example {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: 80%;
+  }
+}
+
+.formAnim {
+  bottom: 69px;
+  animation-name: from;
+  animation-duration: .5s;
+  animation-timing-function: linear;
+}
+
+@keyframes from {
+  from {
+    bottom: -150px;
+  }
+
+  to {
+    bottom: 69px;
+  }
+}
+
+.zoom-in-out-box {
+  transform: scale(1, 1);
+  animation: zoom-in-zoom-out 1s ease;
+}
+
+@keyframes zoom-in-zoom-out {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    transform: scale(1.5, 1.5);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+.p-float-label input:focus~label,
+.p-float-label input.p-filled~label,
+.p-float-label .p-inputwrapper-filled~label,
+.p-float-label .p-inputwrapper-focus~label {
+  font-size: 11pt !important;
+  top: 0;
+  background-color: white;
+  padding: 0 6px;
+}
+
+/* Custom styles to align the toggle mask icon */
+.p-password{
+  display: inline-block;
+}
+.p-password  ~ label,.p-inputtext ~ label ,.p-dropdown~ label, .p-inputnumber~label{
+   /*Adjusttherightposition*/top: 50%;
+  /*Centervertically*/transform: translateY(-50%);
+  /*Centervertically*/position: absolute;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+.p-input-icon , .p-dropdown-clear-icon{
+  /*Adjusttherightposition*/top: 50%;
+  /*Centervertically*/transform: translateY(-50%);
+  /*Centervertically*/position: absolute;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+.p-column-filter-element > .p-inputtext{
+  border: 1px solid rgba(192, 192, 192, 0.63);
+  padding: 5px 5px;
+  width: 100%;
+}
+
+
+.icard .p-card-body {
+  padding: 0;
+}
+
+.icard .p-card-content {
+  padding: 0;
+}
+
+.icard-img {
+  min-height: 150px !important;
+  max-width: 150px !important;
+}
+
+.p-checkbox .p-checkbox-box{
+  border: 1px solid ;
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cropper {
+  position: relative;
+  width: auto;
+  height: 75vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+
+}
+
+input[type='radio'] {
+  accent-color: #1895B0;
+}
+
+.btn {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: #1895B0;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.2rem;
+  border: 2px solid #1895B0;
+  cursor: pointer;
+  margin: 1rem;
+  -webkit-border-radius: 0.2rem;
+  -moz-border-radius: 0.2rem;
+  -ms-border-radius: 0.2rem;
+  -o-border-radius: 0.2rem;
+}
+
+.btn-outline {
+  background: #ffffff;
+  color: #1895B0;
+  border: 2px solid #1895B0;
+}
+
+.action-btns {
+  position: relative;
+  padding-bottom: 1rem;
+  margin-top: 100px !important;
+}
+
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cropped-img {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+}
+
+.aspect-ratios {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}

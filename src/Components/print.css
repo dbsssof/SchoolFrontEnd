@@ -1,0 +1,57 @@
+.page-number {
+  position: absolute;
+  border: 1px solid;
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+}
+
+@media screen {
+  .page-number {
+    right: 0;
+    top: 0;
+  }
+}
+
+@page {
+  padding: 15px;
+}
+
+@media print {
+  .A4Page {
+    padding: 15px;
+    page-break-after: always;
+  }
+
+  .page-number {
+    position: absolute;
+    bottom: -5mm;
+    right: 5mm;
+    font-size: 10pt;
+  }
+
+  .print-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, auto);
+  }
+
+  .print-layout.portrait {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, auto);
+  }
+
+  .print-layout.landscape {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, auto);
+  }
+}
