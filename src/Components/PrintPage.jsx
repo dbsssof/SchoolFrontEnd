@@ -40,7 +40,7 @@ export default function PrintPage() {
     modifiedTemplate = modifiedTemplate.replace("${remark}", data?.remark);
     modifiedTemplate = modifiedTemplate.replace(
       "${transport}",
-      data?.transport
+      data?.transport || "Self"
     );
     modifiedTemplate = modifiedTemplate.replace(
       "${father_name}",
