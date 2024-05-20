@@ -36,6 +36,7 @@ export default function PrintPage() {
       "${mothername}",
       data?.mothername
     );
+modifiedTemplate = modifiedTemplate.replace("${admission_id}", data?.admission_id);
     modifiedTemplate = modifiedTemplate.replace("${rollno}", data?.rollno);
     modifiedTemplate = modifiedTemplate.replace("${remark}", data?.remark);
     modifiedTemplate = modifiedTemplate.replace(
