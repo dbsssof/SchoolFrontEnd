@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Paginator } from "primereact/paginator";
 import { Button } from "primereact/button";
 import moment from "moment";
-import { Dialog } from 'primereact/dialog';
+import { Dialog } from "primereact/dialog";
 import { useDispatch } from "react-redux";
 import { AllTemplateBySchoolStatus } from "../Redux/Slice/TemplateSlice";
 
@@ -20,7 +20,7 @@ export default function PrintPage() {
   useEffect(() => {
     dispatch(AllTemplateBySchoolStatus(localStorage.getItem("schoolid"))).then(
       (doc) => {
-        setTemp(doc.payload[0]?.tempimage );
+        setTemp(doc.payload[0]?.tempimage);
         setTemplate(doc.payload[0]?.temp || "");
       }
     );
@@ -94,17 +94,19 @@ export default function PrintPage() {
 
   return (
     <>
-    {template !== null || "" && temp !== null || "" ? 
-    <Dialog visible={true} maximized showHeader={false}>
-      <div className="flex flex-col justify-center items-center h-full w-full">
-        <span className="text-7xl">🫤</span>
-        <h1 className="text-4xl">Student Icard Not available</h1>
-        <small>Please contact your service provider to update icard templete</small>
-      </div>
-    </Dialog>
-    :
-    
-    ""}
+      {template !== null || temp !== null ? (
+        ""
+      ) : (
+        <Dialog visible={true} maximized showHeader={false}>
+          <div className="flex flex-col justify-center items-center h-full w-full">
+            <span className="text-7xl">🫤</span>
+            <h1 className="text-4xl">Student Icard Not available</h1>
+            <small>
+              Please contact your service provider to update icard templete
+            </small>
+          </div>
+        </Dialog>
+      )}
       <div className="flex items-center">
         <ReactToPrint
           trigger={() => (

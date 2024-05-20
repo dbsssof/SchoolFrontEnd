@@ -452,11 +452,11 @@ export default function ICardForm({ item, label, visbile, disble }) {
             >
               Adm. No.:
             </label>
-            <InputNumber
+            <InputText
               id="number-input"
               name="admission_id"
               value={formData.admission_id}
-              onChange={(e) => formDataHandler(e.originalEvent)}
+              onChange={formDataHandler}
               placeholder="Enter Admission Number"
               inputClassName="pl-2"
               useGrouping={false}
@@ -465,12 +465,11 @@ export default function ICardForm({ item, label, visbile, disble }) {
           </div>
           <div className="w-full  flex items-center my-1">
             <label className="font-semibold w-28 text-start">Roll No.:</label>
-            <InputNumber
+            <InputText
               type="tel"
               name="rollno"
               value={formData.rollno}
-              onChange={(e) => formDataHandler(e.originalEvent)}
-              required
+              onChange={formDataHandler}
               useGrouping={false}
               placeholder="Enter Roll Number"
               inputClassName="pl-2"
