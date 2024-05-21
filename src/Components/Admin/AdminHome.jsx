@@ -24,31 +24,31 @@ export default function AdminHome(params) {
       key: "2",
       label: "Students",
       // icon: "pi pi-users",
-      url: "student",
+      url: "/admin/student",
     },
     {
       key: "3",
       label: "Class",
       // icon: "pi pi-users",
-      url: "class",
+      url: "/admin/class",
     },
     {
       key: "4",
       label: "Section",
       // icon: "pi pi-users",
-      url: "section",
+      url: "/admin/section",
     },
     {
       key: "5",
       label: "ICard Printed",
       // icon: "pi pi-users",
-      url: "printed",
+      url: "/admin/printed",
     },
     {
       key: "5",
-      label: "De-Active & No Image",
+      label: "De-Active",
       // icon: "pi pi-users",
-      url: "deactivewithoutimage",
+      url: "/admin/deactivewithoutimage",
     },
   ];
 
@@ -57,14 +57,14 @@ export default function AdminHome(params) {
   };
 
   const getItemClass = (index) => {
-    return index === activeIndex ? 'bg-cyan-500 text-white' : '';
+    return index === activeIndex ? "bg-cyan-500 text-white" : "";
   };
 
   const enhancedItems = menuItems.map((item, index) => ({
     ...item,
 
     className: getItemClass(index),
-    command: () => handleSelect(index)
+    command: () => handleSelect(index),
   }));
 
   useEffect(() => {
@@ -96,7 +96,6 @@ export default function AdminHome(params) {
     localStorage.removeItem("schoolName");
     navigate("/adminlogin");
   };
-
 
   const confirm1 = () => {
     confirmDialog({
@@ -131,7 +130,7 @@ export default function AdminHome(params) {
       </div>
       <div className="flex bg-white z-50 relative">
         <div className="shadow-md relative  min-w-[15rem] h-[90vh]">
-          <PanelMenu model={enhancedItems} ></PanelMenu>
+          <PanelMenu model={enhancedItems}></PanelMenu>
         </div>
         <div className="w-[87vw] h-[90vh] bg-gray-100 p-2 m-2 rounded-md">
           <Outlet />

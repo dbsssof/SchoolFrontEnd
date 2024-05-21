@@ -35,21 +35,22 @@ export default function ICardForm({ item, label, visbile, disble }) {
     image: "",
     class: "",
     dob: null,
-    schoolid: localStorage.getItem("schoolT"),
+    schoolid: localStorage.getItem("schoolid"),
     admission_id: "",
     section: "",
     status: false,
+    print: false,
   });
-  const { loading, message, error } = useSelector((state) => state.Icard);
+  const { loading} = useSelector((state) => state.Icard);
   const [visbileModel, setVisbileModel] = useState(false);
   const [visbiles, setVisbiles] = useState(false);
   const [imageData, setImageData] = useState(null);
 
   const [date, setDate] = useState();
   const [checked, setChecked] = useState(false);
+  const [checkedPrint, setCheckedPrint] = useState(false);
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedClass, setSelectedClass] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [fatherImage, setFatherImage] = useState(null);
   const [motherImage, setMotherImage] = useState(null);
   const [guardianImage, setGuardianImage] = useState(null);
@@ -70,6 +71,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
       setFormData(item);
       setDate(new Date(item.dob));
       setChecked(item.status);
+      setCheckedPrint(item.print);
       setSelectedClass(item.class);
       setSelectedSection(item.section);
       setImageData(item.image);
@@ -80,20 +82,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
     if (label === "s") {
       setSelectedClass("");
       setSelectedSection("");
-      setFormData({
-        id: "",
-        address: "",
-        father_name: "",
-        name: "",
-        mobile: "",
-        image: "",
-        class: "",
-        dob: null,
-        schoolid: localStorage.getItem("schoolid"),
-        admission_id: "",
-        section: "",
-        status: false,
-      });
+      setFormData(formData);
     }
   }, [label, item]);
 
@@ -103,6 +92,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
       image: imageData,
       dob: date,
       status: checked,
+      print: checkedPrint,
       section: selectedSection,
       class: selectedClass,
       motherimage: motherImage,
@@ -112,6 +102,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
   }, [
     imageData,
     date,
+    checkedPrint,
     checked,
     fatherImage,
     motherImage,
@@ -119,11 +110,6 @@ export default function ICardForm({ item, label, visbile, disble }) {
     selectedClass,
     guardianImage,
   ]);
-
-  const fileHandler = (e) => {
-    setSelectedFile(e.target.files?.[0]);
-    setVisbileModel(true);
-  };
 
   const motherImageHandler = async (e) => {
     try {
@@ -133,6 +119,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
       console.error("Error handling father image:", error);
     }
   };
+
   const gaurdianImageHandler = async (e) => {
     try {
       const base64String = await handleImageUpload(e.target.files[0]);
@@ -141,6 +128,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
       console.error("Error handling father image:", error);
     }
   };
+
   const fatherImageHandler = async (e) => {
     try {
       const base64String = await handleImageUpload(e.target.files[0]);
@@ -194,14 +182,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
   }
 
   const toast = useRef(null);
-  const showSuccessToast = (message) => {
-    toast.current.show({
-      severity: "success",
-      summary: "Success Message",
-      detail: message,
-      life: 3000,
-    });
-  };
+
   const showErrorToast = (error) => {
     toast.current.show({
       severity: "info",
@@ -580,16 +561,27 @@ export default function ICardForm({ item, label, visbile, disble }) {
               className="border-gray-300 border mx-3 py-2 px-2 h-12 w-full rounded-md"
             />
           </div>
-
-          <div className="flex items-center my-1 gap-3">
-            <Checkbox
-              onChange={(e) => setChecked(e.checked)}
-              checked={checked}
-              className="border-gray-400 border rounded-md"
-            ></Checkbox>
-            <label htmlFor="checkstatus" className="font-bold w-28">
-              Active
-            </label>
+          <div className="flex">
+            <div className="flex items-center my-1 gap-3">
+              <Checkbox
+                onChange={(e) => setChecked(e.checked)}
+                checked={checked}
+                className="border-gray-400 border rounded-md"
+              ></Checkbox>
+              <label htmlFor="checkstatus" className="font-bold w-28">
+                Active
+              </label>
+            </div>
+            <div className="flex items-center my-1 gap-3">
+              <Checkbox
+                onChange={(e) => setCheckedPrint(e.checked)}
+                checked={checkedPrint}
+                className="border-gray-400 border rounded-md"
+              ></Checkbox>
+              <label htmlFor="checkstatus" className="font-bold w-28">
+                Printed
+              </label>
+            </div>
           </div>
         </form>
         <div className="flex flex-col justify-center">

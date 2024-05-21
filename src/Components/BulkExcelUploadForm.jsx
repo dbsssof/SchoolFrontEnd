@@ -1,17 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as XLSX from "xlsx";
 import {
-  fetchAllIcards,
-  insertManyIcards,
-  insertMany,
+  insertManyIcards
 } from "../Redux/Slice/IcardSlice";
 import { BiCheck, BiClipboard, BiUpload } from "react-icons/bi";
 import { Ripple } from "primereact/ripple";
 import Loading from "./Loading";
-import { Toast } from "primereact/toast";
 
-export default function BulkExcelUploadForm({ visible }) {
+export default function BulkExcelUploadForm({ }) {
   const [copied, setCopied] = useState(false);
   const [data, setData] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -114,7 +111,10 @@ export default function BulkExcelUploadForm({ visible }) {
 
     data.forEach((row, rowIndex) => {
       requiredColumns.forEach((column) => {
-        if (!row.hasOwnProperty(column) || row[column] === null || row[column] === "") {
+        if (
+          row.hasOwnProperty(column) &&
+          (row[column] === null || row[column] === "")
+        ) {
           errors.push(`Line ${rowIndex + 2}: empty column '${column}'`);
         }
       });
@@ -124,7 +124,9 @@ export default function BulkExcelUploadForm({ visible }) {
         if (row.hasOwnProperty(key)) {
           const value = row[key];
           if (typeof value === "string" && value.trim() === "") {
-            errors.push(`Row ${rowIndex + 1}: Column '${key}' contains an empty string`);
+            errors.push(
+              `Row ${rowIndex + 1}: Column '${key}' contains an empty string`
+            );
           }
           // Additional checks can be added here
         }
