@@ -7,12 +7,15 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BiEdit } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AllClass } from "../../../Redux/Slice/ClassSlice";
-import { fetchAllIcards, updateManyIcards } from "../../../Redux/Slice/IcardSlice";
+import {
+  fetchAllIcards,
+  updateManyIcards,
+} from "../../../Redux/Slice/IcardSlice";
 import { AllSection } from "../../../Redux/Slice/SectionSlice";
 import BulkUpload from "../../BulkExcelUploadForm";
 import ICardForm from "../../ICardForm";
@@ -32,13 +35,20 @@ export default function PrintedICards({}) {
   const [visible2, setVisible2] = useState(false);
   const [imageFilterChecked, setImageFilterChecked] = useState(false);
   const [label, setLable] = useState();
-  const { ICards, loading ,error,message } = useSelector((state) => state.Icard);
+  const { ICards, loading, error, message } = useSelector(
+    (state) => state.Icard
+  );
   const navigate = useNavigate();
   useEffect(() => {
     if (!localStorage.getItem("Admintoken")) {
       return navigate("/adminlogin");
     }
 
+    dispatch(AllClass(localStorage.getItem("schoolid")));
+    dispatch(AllSection(localStorage.getItem("schoolid")));
+  }, [dispatch, navigate]);
+
+  useLayoutEffect(() => {
     dispatch(fetchAllIcards(localStorage.getItem("schoolid"))).then((doc) =>
       setFilterStudent(
         doc.payload.filter(
@@ -46,11 +56,7 @@ export default function PrintedICards({}) {
         )
       )
     );
-
-    dispatch(AllClass(localStorage.getItem("schoolid")));
-    dispatch(AllSection(localStorage.getItem("schoolid")));
-
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -176,7 +182,7 @@ export default function PrintedICards({}) {
   const footer = `In total there are ${
     filterStudent ? filterStudent.length : 0
   } Printed ICard's.`;
-  
+
   const updatetemplete = (event) => {
     return (
       <button
@@ -191,12 +197,13 @@ export default function PrintedICards({}) {
       </button>
     );
   };
+
   useEffect(() => {
-      setFilterStudent(
-        ICards.filter((doc) => doc.status === true && doc.print === true)
-      )
-      }, [ICards,selectedPrinted]);
-  
+    setFilterStudent(
+      ICards.filter((doc) => doc.status === true && doc.print === true)
+    );
+  }, [filterStudent, selectedPrinted]);
+
   const imageFilterHeader = () => {
     return (
       <InputSwitch
@@ -206,35 +213,38 @@ export default function PrintedICards({}) {
     );
   };
 
-  const prindedSubmit=()=>{
+  const prindedSubmit = () => {
     dispatch(updateManyIcards(selectedPrinted)).then(() => {
       dispatch(fetchAllIcards(localStorage.getItem("schoolid")));
-      setSelectedPrinted([])
+      setSelectedPrinted([]);
     });
-  }
+  };
+
   useEffect(() => {
     if (printAllSelect) {
-      setSelectedPrinted(
-        ICards.filter(
-          (doc) =>
-            (doc.status === true && doc.print === false && doc.image != null) ||
-            ""
-        )
+      const data = filterStudent.filter(
+        (doc) => doc.status === true && doc.print === true && doc.image != null
       );
+      setSelectedPrinted(data.map((doc) => ({ ...doc, print: false })));
     } else {
       setSelectedPrinted([]);
     }
-  }, [filterStudent, printAllSelect,ICards]);
+  }, [printAllSelect, ICards]);
+
   const printFilterHeader = () => {
     return (
       <div className="flex items-center gap-2">
-      <Button
-        label={`Move to Printed (${selectedPrinted.length})`}
-        className="bg-cyan-500 w-24 p-2 text-white hover:bg-cyan-600 duration-300"
-        onClick={prindedSubmit}
-      />
-      <Checkbox checked={printAllSelect} onChange={(e)=>setPrintAllSelect(e.checked)} />
-</div>
+        <Button
+          disabled={selectedPrinted != 0 ? false : true}
+          label={`Move to Student (${selectedPrinted.length})`}
+          className="bg-cyan-500 w-24 p-2 text-white hover:bg-cyan-600 duration-300"
+          onClick={prindedSubmit}
+        />
+        <Checkbox
+          checked={printAllSelect}
+          onChange={(e) => setPrintAllSelect(e.checked)}
+        />
+      </div>
     );
   };
 
@@ -244,31 +254,39 @@ export default function PrintedICards({}) {
     );
     return (
       <div className="flex items-center gap-2">
-      <Checkbox
-        checked={isSelected}
-        onChange={(e) => {
-          const checked = e.checked;
-          const updatedSelectedProducts = [...selectedPrinted];
+        <Checkbox
+          checked={isSelected}
+          onChange={(e) => {
+            const checked = e.checked;
+            const updatedSelectedProducts = [...selectedPrinted];
 
-          if (checked) {
-            if (rowData.image !== null || "") {
-              updatedSelectedProducts.push({ ...rowData, print: false });
+            if (checked) {
+              if (rowData.image !== null) {
+                updatedSelectedProducts.push({ ...rowData, print: false });
+              } else {
+                showInfo("Image Not Uploaded !!!");
+              }
             } else {
-              showInfo("Image Not Uploaded !!!");
+              const index = updatedSelectedProducts.findIndex(
+                (product) => product._id === rowData._id
+              );
+              if (index !== -1) {
+                updatedSelectedProducts.splice(index, 1);
+              }
             }
-          } else {
-            const index = updatedSelectedProducts.findIndex(
-              (product) => product._id === rowData._id
-            );
-            if (index !== -1) {
-              updatedSelectedProducts.splice(index, 1);
-            }
-          }
 
-          setSelectedPrinted(updatedSelectedProducts);
-        }}
-      />
-      {rowData.print && <i className={`pi ${rowData.print ? "true-icon pi-check-circle text-green-500" :"false-icon pi-times-circle text-red-500"  }`} />}
+            setSelectedPrinted(updatedSelectedProducts);
+          }}
+        />
+        {rowData.print && (
+          <i
+            className={`pi ${
+              rowData.print
+                ? "true-icon pi-check-circle text-green-500"
+                : "false-icon pi-times-circle text-red-500"
+            }`}
+          />
+        )}
       </div>
     );
   };
@@ -276,16 +294,15 @@ export default function PrintedICards({}) {
   useEffect(() => {
     if (allSelect) {
       setSelectedProducts(
-        ICards.filter(
+        filterStudent.filter(
           (doc) =>
-            (doc.status === true && doc.print === false && doc.image != null) ||
-            ""
+            doc.status === true && doc.print === true && doc.image != null
         )
       );
     } else {
       setSelectedProducts([]);
     }
-  }, [filterStudent, allSelect,ICards]);
+  }, [filterStudent, allSelect]);
 
   const selectFilterHeader = () => {
     return (
@@ -337,14 +354,14 @@ export default function PrintedICards({}) {
     });
   };
 
-  useEffect(()=>{
-    if(message){
-      showSuccess(message)
+  useEffect(() => {
+    if (message) {
+      showSuccess(message);
     }
-    if(error){
-      showInfo(error)
+    if (error) {
+      showInfo(error);
     }
-      },[message,error])
+  }, [message, error]);
   return (
     <>
       <Toast ref={toast} />
@@ -389,10 +406,11 @@ export default function PrintedICards({}) {
           selection={selectedProducts}
         >
           <Column
-            filter
+            // filter
+            selectionMode="multiple"
             showFilterMenu={false}
-            body={selectFilterBody}
-            filterElement={selectFilterHeader}
+            // body={selectFilterBody}
+            // filterElement={selectFilterHeader}
             headerStyle={{ width: "3rem" }}
           ></Column>
           <Column

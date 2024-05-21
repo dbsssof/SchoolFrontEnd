@@ -7,12 +7,15 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BiEdit } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AllClass } from "../../../Redux/Slice/ClassSlice";
-import { fetchAllIcards, updateManyIcards } from "../../../Redux/Slice/IcardSlice";
+import {
+  fetchAllIcards,
+  updateManyIcards,
+} from "../../../Redux/Slice/IcardSlice";
 import { AllSection } from "../../../Redux/Slice/SectionSlice";
 import BulkUpload from "../../BulkExcelUploadForm";
 import ICardForm from "../../ICardForm";
@@ -29,7 +32,9 @@ export default function DeActiveWithoutImage({}) {
   const [allSelect, setAllSelect] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
-  const { ICards, loading ,message ,error } = useSelector((state) => state.Icard);
+  const { ICards, loading, message, error } = useSelector(
+    (state) => state.Icard
+  );
   const [filterStudent, setFilterStudent] = useState();
   const [imageFilterChecked, setImageFilterChecked] = useState(false);
   const [label, setLable] = useState();
@@ -38,16 +43,21 @@ export default function DeActiveWithoutImage({}) {
     if (!localStorage.getItem("Admintoken")) {
       return navigate("/adminlogin");
     }
-    dispatch(fetchAllIcards(localStorage.getItem("schoolid"))).then((doc) =>
-      setFilterStudent(
-        doc.payload.filter(
-          (item) => item.status === false
-        )
-      )
-    );
+    
     dispatch(AllClass(localStorage.getItem("schoolid")));
     dispatch(AllSection(localStorage.getItem("schoolid")));
   }, [dispatch, navigate]);
+
+  useLayoutEffect(() => {
+    dispatch(fetchAllIcards(localStorage.getItem("schoolid"))).then((doc) =>
+      setFilterStudent(
+        doc.payload.filter(
+          (item) =>
+            item.status === true && item.print === false && item.image != null
+        )
+      )
+    );
+  }, [dispatch]);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -187,18 +197,13 @@ export default function DeActiveWithoutImage({}) {
   useEffect(() => {
     if (imageFilterChecked === true) {
       setFilterStudent(
-        ICards.filter(
-          (doc) =>
-            (doc.status === false &&  doc.image === null)
-        )
+        ICards.filter((doc) => doc.status === false && doc.image === null)
       );
     }
     if (imageFilterChecked === false) {
-      setFilterStudent(
-        ICards.filter((doc) => doc.status === false)
-      );
+      setFilterStudent(ICards.filter((doc) => doc.status === false && doc.image != null));
     }
-  }, [imageFilterChecked,ICards]);
+  }, [imageFilterChecked, ICards]);
 
   const imageFilterHeader = () => {
     return (
@@ -209,17 +214,17 @@ export default function DeActiveWithoutImage({}) {
     );
   };
 
-  const prindedSubmit=()=>{
+  const prindedSubmit = () => {
     dispatch(updateManyIcards(selectedPrinted)).then(() => {
       dispatch(fetchAllIcards(localStorage.getItem("schoolid")));
-      setSelectedPrinted([])
+      setSelectedPrinted([]);
     });
-  }
+  };
 
   const printFilterHeader = () => {
     return (
       <Button
-      onClick={prindedSubmit}
+        onClick={prindedSubmit}
         label={`Move to Printed (${selectedPrinted.length})`}
         className="bg-cyan-500 w-24 p-2 text-white hover:bg-cyan-600 duration-300"
       />
@@ -230,34 +235,42 @@ export default function DeActiveWithoutImage({}) {
     const isSelected = selectedPrinted.some(
       (product) => product._id === rowData._id
     );
-    return (<div className="flex gap-2 items-center">
-    
-      <Checkbox
-        checked={isSelected}
-        onChange={(e) => {
-          const checked = e.checked;
-          const updatedSelectedProducts = [...selectedPrinted];
+    return (
+      <div className="flex gap-2 items-center">
+        <Checkbox
+          checked={isSelected}
+          onChange={(e) => {
+            const checked = e.checked;
+            const updatedSelectedProducts = [...selectedPrinted];
 
-          if (checked) {
-            if (rowData.image !== null  && rowData.status == true) {
-              updatedSelectedProducts.push({ ...rowData, print: true });
+            if (checked) {
+              if (rowData.image !== null && rowData.status == true) {
+                updatedSelectedProducts.push({ ...rowData, print: true });
+              } else {
+                showInfo("Image not uploaded or Student not active !!!");
+              }
             } else {
-              showInfo("Image not uploaded or Student not active !!!");
+              const index = updatedSelectedProducts.findIndex(
+                (product) => product._id === rowData._id
+              );
+              if (index !== -1) {
+                updatedSelectedProducts.splice(index, 1);
+              }
             }
-          } else {
-            const index = updatedSelectedProducts.findIndex(
-              (product) => product._id === rowData._id
-            );
-            if (index !== -1) {
-              updatedSelectedProducts.splice(index, 1);
-            }
-          }
 
-          setSelectedPrinted(updatedSelectedProducts);
-        }}
-      />
-{rowData.print && <i className={`pi ${rowData.print ? "true-icon pi-check-circle text-green-500" :"false-icon pi-times-circle text-red-500"  }`} />}
-</div>
+            setSelectedPrinted(updatedSelectedProducts);
+          }}
+        />
+        {rowData.print && (
+          <i
+            className={`pi ${
+              rowData.print
+                ? "true-icon pi-check-circle text-green-500"
+                : "false-icon pi-times-circle text-red-500"
+            }`}
+          />
+        )}
+      </div>
     );
   };
 
@@ -292,7 +305,7 @@ export default function DeActiveWithoutImage({}) {
           const updatedSelectedProducts = [...selectedProducts];
 
           if (checked) {
-            if (rowData.image !== null || "" ) {
+            if (rowData.image !== null || "") {
               updatedSelectedProducts.push(rowData);
             } else {
               showInfo("Image Not Uploaded !!!");
@@ -324,14 +337,14 @@ export default function DeActiveWithoutImage({}) {
     });
   };
 
-  useEffect(()=>{
-    if(message){
-      showSuccess(message)
+  useEffect(() => {
+    if (message) {
+      showSuccess(message);
     }
-    if(error){
-      showInfo(error)
+    if (error) {
+      showInfo(error);
     }
-      },[message,error])
+  }, [message, error]);
 
   return (
     <>
@@ -375,12 +388,14 @@ export default function DeActiveWithoutImage({}) {
           metaKeySelection={false}
           selectionMode="checkbox"
           selection={selectedProducts}
+          onSelectionChange={(e)=>setSelectedProducts(e.value)}
         >
           <Column
-            filter
+            selectionMode="multiple"
+            // filter
             showFilterMenu={false}
-            body={selectFilterBody}
-            filterElement={selectFilterHeader}
+            // body={selectFilterBody}
+            // filterElement={selectFilterHeader}
             headerStyle={{ width: "3rem" }}
           ></Column>
           <Column

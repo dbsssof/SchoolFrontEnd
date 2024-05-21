@@ -441,7 +441,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
               placeholder="Enter Admission Number"
               inputClassName="pl-2"
               useGrouping={false}
-              className="border-gray-300 border mx-3 w-full rounded-md h-12"
+              className="pl-2 border-gray-300 border mx-3 w-full rounded-md h-12"
             />
           </div>
           <div className="w-full  flex items-center my-1">
@@ -454,7 +454,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
               useGrouping={false}
               placeholder="Enter Roll Number"
               inputClassName="pl-2"
-              className="border-gray-300 border h-12 mx-3 w-full rounded-md"
+              className="pl-2 border-gray-300 border h-12 mx-3 w-full rounded-md"
             />
           </div>
           <div className="w-full flex items-center my-1">
