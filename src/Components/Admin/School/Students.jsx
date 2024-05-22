@@ -54,7 +54,7 @@ export default function Teacher({}) {
       setFilterStudent(
         doc.payload.filter(
           (item) =>
-            item.status === true && item.print === false && item.image != null
+            item.status === true  && item.image != null
         )
       )
     );
@@ -202,7 +202,7 @@ export default function Teacher({}) {
   useEffect(() => {
     if (imageFilterChecked === true) {
       setFilterStudent(
-        ICards  .filter(
+        ICards.filter(
           (doc) =>
             doc.status === true && doc.print === false && doc.image === null
         )
@@ -216,7 +216,7 @@ export default function Teacher({}) {
         )
       );
     }
-  }, [imageFilterChecked, ICards]);
+  }, [imageFilterChecked]);
 
   const imageFilterHeader = () => {
     return (
@@ -243,7 +243,7 @@ export default function Teacher({}) {
     } else {
       setSelectedPrinted([]);
     }
-  }, [printAllSelect, ICards]);
+  }, [printAllSelect]);
 
   const printFilterHeader = () => {
     return (
@@ -313,7 +313,7 @@ export default function Teacher({}) {
     } else {
       setSelectedProducts([]);
     }
-  }, [filterStudent, allSelect, ICards]);
+  }, [filterStudent, allSelect]);
 
   const selectFilterHeader = () => {
     return (

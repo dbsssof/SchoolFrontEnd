@@ -41,7 +41,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
     status: false,
     print: false,
   });
-  const { loading} = useSelector((state) => state.Icard);
+  const { loading } = useSelector((state) => state.Icard);
   const [visbileModel, setVisbileModel] = useState(false);
   const [visbiles, setVisbiles] = useState(false);
   const [imageData, setImageData] = useState(null);
@@ -519,7 +519,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
             />
           </div>
           <div className="w-full flex items-center my-1">
-            <label className="font-semibold w-28 text-start">F. Name:</label>{" "}
+            <label className="font-semibold w-28 text-start">F. Name:</label>
             <InputText
               type="text"
               required
