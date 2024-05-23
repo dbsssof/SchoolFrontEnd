@@ -12,6 +12,7 @@ export const loginParty = createAsyncThunk(
         localStorage.setItem("schoolid", response.data.schoolid);
         localStorage.setItem("user", response.data.email);
         localStorage.setItem("partyToken", response.data.partyToken);
+        localStorage.setItem("expired", response.data.expired);
         return response.data;
       }
     } catch (error) {
@@ -72,6 +73,7 @@ export const loginpartySlice = createSlice({
       localStorage.removeItem("schoolid");
       localStorage.removeItem("partyToken");
       localStorage.removeItem("schoolName");
+      localStorage.removeItem("expiredStatus");
     },
   },
   extraReducers: (builder) => {

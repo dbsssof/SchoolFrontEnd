@@ -54,7 +54,7 @@ export default function Teacher({}) {
       setFilterStudent(
         doc.payload.filter(
           (item) =>
-            item.status === true  && item.image != null
+            item.status === true && item.print === false && item.image != null
         )
       )
     );

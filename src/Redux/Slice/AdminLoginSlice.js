@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const url = process.env.REACT_APP_API + "/adminauth";
 
@@ -13,6 +12,7 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem("email", response.data.email);
         localStorage.setItem("Admintoken", response.data.adminToken);
         localStorage.setItem("schoolid", response.data.schoolid);
+        localStorage.setItem("expired", response.data.expired || "");
         return response.data;
       }
       return rejectWithValue(response.data);
@@ -39,6 +39,8 @@ export const loginSlice = createSlice({
       localStorage.removeItem("Admintoken");
       localStorage.removeItem("schoolid");
       localStorage.removeItem("schoolName");
+      localStorage.removeItem("expired");
+      localStorage.removeItem("expiredStatus");
     },
   },
   extraReducers: (builder) => {

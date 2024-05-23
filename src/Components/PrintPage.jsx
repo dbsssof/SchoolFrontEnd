@@ -36,7 +36,10 @@ export default function PrintPage() {
       "${mothername}",
       data?.mothername
     );
-modifiedTemplate = modifiedTemplate.replace("${admission_id}", data?.admission_id);
+    modifiedTemplate = modifiedTemplate.replace(
+      "${admission_id}",
+      data?.admission_id
+    );
     modifiedTemplate = modifiedTemplate.replace("${rollno}", data?.rollno);
     modifiedTemplate = modifiedTemplate.replace("${remark}", data?.remark);
     modifiedTemplate = modifiedTemplate.replace(
@@ -81,6 +84,7 @@ modifiedTemplate = modifiedTemplate.replace("${admission_id}", data?.admission_i
           {data.state.student.map((item, index) => (
             <div
               key={index}
+              className="my-2"
               dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
             />
           ))}
@@ -95,9 +99,7 @@ modifiedTemplate = modifiedTemplate.replace("${admission_id}", data?.admission_i
 
   return (
     <>
-      {template !== null || temp !== null ? (
-        ""
-      ) : (
+      {template == null && temp == null ? (
         <Dialog visible={true} maximized showHeader={false}>
           <div className="flex flex-col justify-center items-center h-full w-full">
             <span className="text-7xl">🫤</span>
@@ -107,6 +109,8 @@ modifiedTemplate = modifiedTemplate.replace("${admission_id}", data?.admission_i
             </small>
           </div>
         </Dialog>
+      ) : (
+        ""
       )}
       <div className="flex items-center">
         <ReactToPrint

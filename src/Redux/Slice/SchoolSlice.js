@@ -20,7 +20,9 @@ export const getByUserAllSchool = createAsyncThunk(
   "School/ByIdSchool",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${url}/${id}`);
+      const res = await axios.get(
+        `${url}/${id}/${localStorage.getItem("expired")}`
+      );
       localStorage.setItem("schoolName", res.data.name);
       return res.data;
     } catch (error) {

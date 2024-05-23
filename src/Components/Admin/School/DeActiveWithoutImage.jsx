@@ -53,7 +53,7 @@ export default function DeActiveWithoutImage({}) {
       setFilterStudent(
         doc.payload.filter(
           (item) =>
-            item.status === true && item.print === false && item.image != null
+            item.status === false && item.print === false && item.image != null
         )
       )
     );

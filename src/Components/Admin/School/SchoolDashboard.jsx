@@ -5,7 +5,7 @@ import Student from "./Students";
 import Teacher from "./Teacher";
 export default function SchoolDashboard({ data }) {
   return (
-    <>
+    <div className="">
       <TabView>
         <TabPanel
           header="Update School"
@@ -26,6 +26,6 @@ export default function SchoolDashboard({ data }) {
           <Student school={data?._id} />
         </TabPanel>
       </TabView>
-    </>
+    </div>
   );
 }

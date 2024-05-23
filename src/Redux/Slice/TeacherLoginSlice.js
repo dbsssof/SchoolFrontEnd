@@ -8,13 +8,11 @@ export const loginTeacher = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${url}`, credentials);
-      if (response.status === 404) {
-        return rejectWithValue(response.data);
-      }
       if (response.status === 200) {
         localStorage.setItem("schoolid", response.data.schoolid);
         localStorage.setItem("user", response.data.email);
         localStorage.setItem("Ttoken", response.data.token);
+        localStorage.setItem("expired", response.data.expired);
         return response.data;
       }
     } catch (error) {

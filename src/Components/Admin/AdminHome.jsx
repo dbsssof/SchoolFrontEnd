@@ -1,13 +1,15 @@
 import { PanelMenu } from "primereact/panelmenu";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import moment from "moment";
 import { getByUserAllSchool } from "../../Redux/Slice/SchoolSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "primereact/button";
 import { getAllTeacherBySchool } from "../../Redux/Slice/TeacherSlice";
 import { fetchAllIcards } from "../../Redux/Slice/IcardSlice";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { classNames } from "primereact/utils";
+import { BiError } from "react-icons/bi";
+import { verifyExpire } from "../../Redux/Slice/ExpireSlice";
 export default function AdminHome(params) {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(null);
@@ -43,6 +45,7 @@ export default function AdminHome(params) {
       label: "ICard Printed",
       // icon: "pi pi-users",
       url: "/admin/printed",
+      disabled: localStorage.getItem("expiredStatus"),
     },
     {
       key: "5",
@@ -71,6 +74,9 @@ export default function AdminHome(params) {
     if (!localStorage.getItem("Admintoken")) {
       return navigate("/adminlogin");
     }
+    dispatch(verifyExpire()).then((doc)=>{
+      console.log(doc);
+    });
   }, [navigate, dispatch]);
 
   useLayoutEffect(() => {
@@ -94,6 +100,8 @@ export default function AdminHome(params) {
     localStorage.removeItem("Admintoken");
     localStorage.removeItem("schoolid");
     localStorage.removeItem("schoolName");
+    localStorage.removeItem("expiredStatus")
+    localStorage.removeItem("expired")
     navigate("/adminlogin");
   };
 
@@ -110,13 +118,22 @@ export default function AdminHome(params) {
   };
   return (
     <>
-      {" "}
       <ConfirmDialog />
-      <div className="bg-cyan-500 flex justify-between px-10 py-5 sticky top-0 z-50">
+
+      <div className="bg-cyan-500 flex justify-between px-10 py-5 sticky top-0 z-40">
         <h1 className="text-white font-bold capitalize">
           {localStorage.getItem("schoolName")}
         </h1>
+        {localStorage.getItem("expiredStatus") === true  && (
+          <div className="flex justify-center font-bold -mt-5 w-80 rounded-es-lg rounded-ee-lg shadow-gray-500 shadow-md bg-white">
+            <h1 className="py-2 px-3 text-red-500 flex items-center gap-1">
+              <BiError />
+              Expired Subscription
+            </h1>
+          </div>
+        )  }
         <div className="flex gap-3 items-center">
+          {localStorage.getItem("expired") !== "" ? <div className="text-white font-bold">{"Expired on: " + moment(localStorage.getItem("expired")).format('DD/MM/YYYY, h:mm:ss A')}</div> : ""}
           <div className="flex text-white italic gap-1">
             <small>Hello,</small>
             <small>{localStorage.getItem("email")}</small>
@@ -128,7 +145,7 @@ export default function AdminHome(params) {
           />
         </div>
       </div>
-      <div className="flex bg-white z-50 relative">
+      <div className="flex bg-white z-40 relative">
         <div className="shadow-md relative  min-w-[15rem] h-[90vh]">
           <PanelMenu model={enhancedItems}></PanelMenu>
         </div>

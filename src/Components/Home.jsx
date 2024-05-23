@@ -17,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../Redux/Slice/LoginSlice";
 import { getByUserAllSchool } from "../Redux/Slice/SchoolSlice";
 import { getByIdTeacher } from "../Redux/Slice/TeacherSlice";
+import { verifyExpire } from "../Redux/Slice/ExpireSlice";
 export default function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ export default function Home() {
         }
       });
     });
+    dispatch(verifyExpire());
   }, [dispatch]);
 
   const accept = () => {
