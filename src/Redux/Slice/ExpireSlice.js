@@ -19,6 +19,8 @@ export const verifyExpire = createAsyncThunk(
       }else{
         localStorage.setItem("expiredStatus",false);
       }
+
+      console.log(error);
       return rejectWithValue(error.response.data.error);
     }
   }

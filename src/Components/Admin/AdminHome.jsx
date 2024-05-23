@@ -45,7 +45,7 @@ export default function AdminHome(params) {
       label: "ICard Printed",
       // icon: "pi pi-users",
       url: "/admin/printed",
-      disabled: localStorage.getItem("expiredStatus"),
+      disabled: localStorage.getItem("expiredStatus") === true ? true : false,
     },
     {
       key: "5",
@@ -74,9 +74,7 @@ export default function AdminHome(params) {
     if (!localStorage.getItem("Admintoken")) {
       return navigate("/adminlogin");
     }
-    dispatch(verifyExpire()).then((doc)=>{
-      console.log(doc);
-    });
+    dispatch(verifyExpire())
   }, [navigate, dispatch]);
 
   useLayoutEffect(() => {
