@@ -32,6 +32,7 @@ export default function PrintPage() {
     modifiedTemplate = modifiedTemplate.replace("${NO_IMAGE}", data?.image);
     modifiedTemplate = modifiedTemplate.replace("${name}", data?.name);
     modifiedTemplate = modifiedTemplate.replace("${class}", data?.class);
+     modifiedTemplate = modifiedTemplate.replace("${section}", data?.section);
     modifiedTemplate = modifiedTemplate.replace(
       "${mothername}",
       data?.mothername
