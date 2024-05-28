@@ -73,14 +73,7 @@ export default function PartyHome(params) {
             </label>
           </div>
 
-          {localStorage.getItem("expiredStatus") && (
-            <div className="flex justify-center font-bold w-80 h-10 -m-4 rounded-es-lg rounded-ee-lg shadow-gray-500 shadow-md bg-white">
-              <h1 className="py-0 px-3 text-red-500 flex items-center gap-1">
-                <BiError />
-                Expired Subscription
-              </h1>
-            </div>
-          )}
+      
 
           <button onClick={confirm1} className="text-white p-ripple">
             <BiLogOutCircle size={30} />

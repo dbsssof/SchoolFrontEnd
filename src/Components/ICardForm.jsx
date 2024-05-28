@@ -26,6 +26,7 @@ import ImageCropper from "./ImageCropper2";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+
 export default function ICardForm({ item, label, visbile, disble }) {
   const [formData, setFormData] = useState({
     address: "",

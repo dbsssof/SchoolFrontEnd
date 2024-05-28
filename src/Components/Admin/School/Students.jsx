@@ -216,7 +216,7 @@ export default function Teacher({}) {
         )
       );
     }
-  }, [imageFilterChecked]);
+  }, [imageFilterChecked,ICards]);
 
   const imageFilterHeader = () => {
     return (
