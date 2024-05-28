@@ -12,7 +12,9 @@ import { AllTemplateBySchoolStatus } from "../Redux/Slice/TemplateSlice";
 export default function PrintPage() {
   const data = useLocation();
   const [template, setTemplate] = useState("");
+  const [template2, setTemplate2] = useState("");
   const [temp, setTemp] = useState("");
+  const [temp2, setTemp2] = useState("");
   const dispatch = useDispatch();
   const refs = useRef([]);
   const refBulk = useRef();
@@ -22,6 +24,8 @@ export default function PrintPage() {
       (doc) => {
         setTemp(doc.payload[0]?.tempimage);
         setTemplate(doc.payload[0]?.temp || "");
+        setTemp2(doc.payload[0]?.tempimage2);
+        setTemplate2(doc.payload[0]?.temp2 || "");
       }
     );
   }, [dispatch]);
@@ -32,7 +36,63 @@ export default function PrintPage() {
     modifiedTemplate = modifiedTemplate.replace("${NO_IMAGE}", data?.image);
     modifiedTemplate = modifiedTemplate.replace("${name}", data?.name);
     modifiedTemplate = modifiedTemplate.replace("${class}", data?.class);
-     modifiedTemplate = modifiedTemplate.replace("${section}", data?.section);
+    modifiedTemplate = modifiedTemplate.replace("${section}", data?.section);
+
+    modifiedTemplate = modifiedTemplate.replace(
+      "${mothername}",
+      data?.mothername
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${admission_id}",
+      data?.admission_id
+    );
+    modifiedTemplate = modifiedTemplate.replace("${rollno}", data?.rollno);
+    modifiedTemplate = modifiedTemplate.replace("${remark}", data?.remark);
+    modifiedTemplate = modifiedTemplate.replace(
+      "${transport}",
+      data?.transport || "Self"
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${father_name}",
+      data?.father_name
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${dob}",
+      moment(data?.dob).format("DD/MM/YYYY")
+    );
+    modifiedTemplate = modifiedTemplate.replace("${mobile}", data?.mobile);
+    modifiedTemplate = modifiedTemplate.replace("${address}", data?.address);
+    return modifiedTemplate;
+  };
+
+  const renderTemplate2 = (data) => {
+    let modifiedTemplate = template2;
+    modifiedTemplate = modifiedTemplate.replace("${PuchSheelIcard}", temp2);
+    modifiedTemplate = modifiedTemplate.replace(
+      "${fathername}",
+      data?.father_name
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${fatherimage}",
+      data?.fatherimage
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${mothername}",
+      data?.mothername
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${motherimage}",
+      data?.motherimage
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${guardianname}",
+      data?.guardianname
+    );
+    modifiedTemplate = modifiedTemplate.replace(
+      "${guardianimage}",
+      data?.guardianimage
+    );
+
     modifiedTemplate = modifiedTemplate.replace(
       "${mothername}",
       data?.mothername
@@ -83,11 +143,18 @@ export default function PrintPage() {
       >
         <div className="relative grid gap-3 portrait:grid-cols-2 landscape:grid-cols-5 border-2 print:border-none border-black">
           {data.state.student.map((item, index) => (
-            <div
-              key={index}
-              className="my-2"
-              dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
-            />
+            <div className="flex gap-4">
+              <div
+                key={index}
+                className="my-2"
+                dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
+              />
+              <div
+                key={index}
+                className="my-2"
+                dangerouslySetInnerHTML={{ __html: renderTemplate2(item) }}
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -157,10 +224,20 @@ export default function PrintPage() {
               {data.state.student
                 .slice(pageIndex * cardsPerPage, (pageIndex + 1) * cardsPerPage)
                 .map((item, index) => (
-                  <div
-                    key={index}
-                    dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
-                  />
+                  <div className="flex gap-4">
+                    <div
+                      key={index}
+                      className="my-2"
+                      dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
+                    />
+                    <div
+                      key={index}
+                      className="my-2"
+                      dangerouslySetInnerHTML={{
+                        __html: renderTemplate2(item),
+                      }}
+                    />
+                  </div>
                 ))}
             </div>
             <span className="page-number">{pageIndex + 1}</span>

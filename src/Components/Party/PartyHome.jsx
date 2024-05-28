@@ -71,9 +71,7 @@ export default function PartyHome(params) {
                 Welcome, {localStorage.getItem("user")}
               </span>
             </label>
-          </div>
-
-      
+          </div>      
 
           <button onClick={confirm1} className="text-white p-ripple">
             <BiLogOutCircle size={30} />
