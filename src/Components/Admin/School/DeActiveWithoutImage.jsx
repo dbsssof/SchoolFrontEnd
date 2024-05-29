@@ -43,7 +43,7 @@ export default function DeActiveWithoutImage({}) {
     if (!localStorage.getItem("Admintoken")) {
       return navigate("/adminlogin");
     }
-    
+
     dispatch(AllClass(localStorage.getItem("schoolid")));
     dispatch(AllSection(localStorage.getItem("schoolid")));
   }, [dispatch, navigate]);
@@ -53,7 +53,10 @@ export default function DeActiveWithoutImage({}) {
       setFilterStudent(
         doc.payload.filter(
           (item) =>
-            item.status === false && item.print === false && item.image != null
+            (item.status === false &&
+              item.print === false &&
+              item.image != null) ||
+            ""
         )
       )
     );
@@ -197,11 +200,17 @@ export default function DeActiveWithoutImage({}) {
   useEffect(() => {
     if (imageFilterChecked === true) {
       setFilterStudent(
-        ICards.filter((doc) => doc.status === false && doc.image === null)
+        ICards.filter(
+          (doc) => (doc.status === false && doc.image == null) || ""
+        )
       );
     }
     if (imageFilterChecked === false) {
-      setFilterStudent(ICards.filter((doc) => doc.status === false && doc.image != null));
+      setFilterStudent(
+        ICards.filter(
+          (doc) => (doc.status === false && doc.image != null) || ""
+        )
+      );
     }
   }, [imageFilterChecked, ICards]);
 
@@ -388,7 +397,7 @@ export default function DeActiveWithoutImage({}) {
           metaKeySelection={false}
           selectionMode="checkbox"
           selection={selectedProducts}
-          onSelectionChange={(e)=>setSelectedProducts(e.value)}
+          onSelectionChange={(e) => setSelectedProducts(e.value)}
         >
           <Column
             selectionMode="multiple"

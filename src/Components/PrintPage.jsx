@@ -66,7 +66,7 @@ export default function PrintPage() {
   };
 
   const renderTemplate2 = (data) => {
-    let modifiedTemplate = template2;
+    let modifiedTemplate = template2 || "";
     modifiedTemplate = modifiedTemplate.replace("${PuchSheelIcard}", temp2);
     modifiedTemplate = modifiedTemplate.replace(
       "${fathername}",
@@ -97,26 +97,6 @@ export default function PrintPage() {
       "${mothername}",
       data?.mothername
     );
-    modifiedTemplate = modifiedTemplate.replace(
-      "${admission_id}",
-      data?.admission_id
-    );
-    modifiedTemplate = modifiedTemplate.replace("${rollno}", data?.rollno);
-    modifiedTemplate = modifiedTemplate.replace("${remark}", data?.remark);
-    modifiedTemplate = modifiedTemplate.replace(
-      "${transport}",
-      data?.transport || "Self"
-    );
-    modifiedTemplate = modifiedTemplate.replace(
-      "${father_name}",
-      data?.father_name
-    );
-    modifiedTemplate = modifiedTemplate.replace(
-      "${dob}",
-      moment(data?.dob).format("DD/MM/YYYY")
-    );
-    modifiedTemplate = modifiedTemplate.replace("${mobile}", data?.mobile);
-    modifiedTemplate = modifiedTemplate.replace("${address}", data?.address);
     return modifiedTemplate;
   };
 
@@ -148,7 +128,7 @@ export default function PrintPage() {
                 key={index}
                 className="my-2"
                 dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
-              />
+              />``
               <div
                 key={index}
                 className="my-2"

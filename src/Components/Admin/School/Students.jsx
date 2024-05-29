@@ -54,7 +54,10 @@ export default function Teacher({}) {
       setFilterStudent(
         doc.payload.filter(
           (item) =>
-            item.status === true && item.print === false && item.image != null
+            (item.status === true &&
+              item.print === false &&
+              item.image != null) ||
+            ""
         )
       )
     );
@@ -204,7 +207,8 @@ export default function Teacher({}) {
       setFilterStudent(
         ICards.filter(
           (doc) =>
-            doc.status === true && doc.print === false && doc.image === null
+            (doc.status === true && doc.print === false && doc.image == null) ||
+            ""
         )
       );
     }
@@ -212,11 +216,12 @@ export default function Teacher({}) {
       setFilterStudent(
         ICards.filter(
           (doc) =>
-            doc.status === true && doc.print === false && doc.image != null
+            (doc.status === true && doc.print === false && doc.image != null) ||
+            ""
         )
       );
     }
-  }, [imageFilterChecked,ICards]);
+  }, [imageFilterChecked, ICards]);
 
   const imageFilterHeader = () => {
     return (
