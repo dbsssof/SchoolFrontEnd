@@ -30,6 +30,7 @@
   @page {
     padding: 15px;
   }
+
   .A4Page {
     padding: 15px;
     page-break-after: always;

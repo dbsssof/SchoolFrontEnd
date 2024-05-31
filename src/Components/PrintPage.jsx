@@ -1,34 +1,40 @@
-import React, { createRef, useEffect, useRef, useState } from "react";
-import "./print.css";
-import ReactToPrint from "react-to-print";
-import { useLocation } from "react-router-dom";
-import { Paginator } from "primereact/paginator";
-import { Button } from "primereact/button";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import moment from "moment";
+import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import { Divider } from "primereact/divider";
+import { Paginator } from "primereact/paginator";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import ReactToPrint from "react-to-print";
 import { AllTemplateBySchoolStatus } from "../Redux/Slice/TemplateSlice";
+import "./print.css";
+import html2canvas from "html2canvas";
 
 export default function PrintPage() {
   const data = useLocation();
   const [template, setTemplate] = useState("");
   const [template2, setTemplate2] = useState("");
-  const [temp, setTemp] = useState("");
-  const [temp2, setTemp2] = useState("");
+  const [temp, setTemp] = useState();
+  const [temp2, setTemp2] = useState();
   const dispatch = useDispatch();
   const refs = useRef([]);
   const refBulk = useRef();
-
+  let cardsPerPage = temp2 && temp ? 5 : 10;
+  const [progress, setProgress] = useState(0); // State for progress percentage
+  const [generatingPdf, setGeneratingPdf] = useState(false);
   useEffect(() => {
     dispatch(AllTemplateBySchoolStatus(localStorage.getItem("schoolid"))).then(
       (doc) => {
         setTemp(doc.payload[0]?.tempimage);
-        setTemplate(doc.payload[0]?.temp || "");
-        setTemp2(doc.payload[0]?.tempimage2);
-        setTemplate2(doc.payload[0]?.temp2 || "");
+        setTemplate(doc.payload[0]?.temp);
+        setTemp2(doc.payload[0]?.tempimage2 || undefined);
+        setTemplate2(doc.payload[0]?.temp2);
       }
     );
-  }, [dispatch]);
+  }, [dispatch, temp, temp2]);
 
   const renderTemplate = (data) => {
     let modifiedTemplate = template;
@@ -100,7 +106,6 @@ export default function PrintPage() {
     return modifiedTemplate;
   };
 
-  const cardsPerPage = 10;
   const totalCards = data.state.student.length;
   const totalPages = Math.ceil(totalCards / cardsPerPage);
 
@@ -117,23 +122,28 @@ export default function PrintPage() {
   const BulkPrint = () => {
     return (
       <div
-        className="A4Page relative"
+        className="A4Page relative hidden  print:block"
         style={{ pageBreakAfter: "always" }}
         ref={refBulk}
       >
         <div className="relative grid gap-3 portrait:grid-cols-2 landscape:grid-cols-5 border-2 print:border-none border-black">
           {data.state.student.map((item, index) => (
-            <div className="flex gap-4">
+            <div className="flex flex-col">
               <div
                 key={index}
                 className="my-2"
                 dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
-              />``
-              <div
-                key={index}
-                className="my-2"
-                dangerouslySetInnerHTML={{ __html: renderTemplate2(item) }}
               />
+              {temp2 && (
+                <>
+                  <Divider className="border my-3" />
+                  <div
+                    key={index}
+                    className="my-2"
+                    dangerouslySetInnerHTML={{ __html: renderTemplate2(item) }}
+                  />
+                </>
+              )}
             </div>
           ))}
         </div>
@@ -145,6 +155,7 @@ export default function PrintPage() {
     BulkPrint();
   }, [data]);
 
+ 
   return (
     <>
       {template == null && temp == null ? (
@@ -189,7 +200,8 @@ export default function PrintPage() {
             </Button>
           )}
           content={() => refBulk.current} // Assuming only one page is printed at a time
-        />
+        />   
+   
       </div>
       {<BulkPrint />}
       {Array.from({ length: totalPages }, (_, pageIndex) => (
@@ -200,23 +212,28 @@ export default function PrintPage() {
             style={{ pageBreakAfter: "always" }}
             ref={(el) => (refs.current[pageIndex] = el)}
           >
-            <div className="relative grid gap-3 portrait:grid-cols-2 landscape:grid-cols-5 border-2 print:border-none border-black">
+            <div className="relative grid gap-3 break-after-page:m-2 portrait:grid-cols-2 landscape:grid-cols-5 border-2 print:border-none border-black">
               {data.state.student
                 .slice(pageIndex * cardsPerPage, (pageIndex + 1) * cardsPerPage)
                 .map((item, index) => (
-                  <div className="flex gap-4">
+                  <div className="flex flex-col gap-4">
                     <div
                       key={index}
                       className="my-2"
                       dangerouslySetInnerHTML={{ __html: renderTemplate(item) }}
                     />
-                    <div
-                      key={index}
-                      className="my-2"
-                      dangerouslySetInnerHTML={{
-                        __html: renderTemplate2(item),
-                      }}
-                    />
+                    {temp2 && (
+                      <>
+                        <Divider className="border my-3" />
+                        <div
+                          key={index}
+                          className="my-2"
+                          dangerouslySetInnerHTML={{
+                            __html: renderTemplate2(item),
+                          }}
+                        />
+                      </>
+                    )}
                   </div>
                 ))}
             </div>
