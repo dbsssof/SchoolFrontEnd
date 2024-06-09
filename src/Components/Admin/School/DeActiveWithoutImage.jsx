@@ -115,10 +115,11 @@ export default function DeActiveWithoutImage({}) {
           onClick={() => setVisible2(true)}
           className="bg-cyan-500 hover:bg-cyan-600 duration-300 text-white p-2"
         />
-        <Button
+        <Button 
           label={`Print ICard's (${selectedProducts.length})`}
           onClick={handlePrint}
-          disabled={selectedProducts.length >= 1 ? false : true}
+           disabled
+         // disabled={selectedProducts.length >= 1 ? false : true}?zeq
           className="bg-cyan-500 hover:bg-cyan-600 duration-300 text-white p-2"
         />
 
