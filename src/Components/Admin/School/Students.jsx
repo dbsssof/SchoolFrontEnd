@@ -121,8 +121,8 @@ export default function Teacher({}) {
         <Button
           label={`Print ICard's (${selectedProducts.length})`}
           onClick={handlePrint}
-          disabled
-          // disabled={selectedProducts.length >= 1 ? false : true}
+          // disabled
+          disabled={selectedProducts.length >= 1 ? false : true}
           className="bg-cyan-500 hover:bg-cyan-600 duration-300 text-white p-2"
         />
 
