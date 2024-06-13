@@ -196,7 +196,7 @@ export default function ICard() {
       <div>
         <Button
           icon={<BiPlus size={40} />}
-          className="absolute bottom-10 right-10 bg-blue-500 h-16 w-16 rounded-full text-white"
+          className="absolute bottom-10 right-10 bg-blue-500 h-16 w-16 rounded-full text-white z-50"
           onClick={() => {
             setLable("s");
             setVisible(true);
