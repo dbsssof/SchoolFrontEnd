@@ -1,32 +1,29 @@
-import { Dialog } from "primereact/dialog";
-import No_Image from "../Assets/Image/NO_IMAGE.jpg";
 import moment from "moment";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { Ripple } from "primereact/ripple";
-import { Image } from "primereact/image";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
+import { Dialog } from "primereact/dialog";
 import { IconField } from "primereact/iconfield";
+import { Image } from "primereact/image";
 import { InputSwitch } from "primereact/inputswitch";
+import { InputText } from "primereact/inputtext";
+import { Ripple } from "primereact/ripple";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import No_Image from "../Assets/Image/NO_IMAGE.jpg";
 
-import Loading from "../Loading";
+import { Dropdown } from "primereact/dropdown";
 import {
   BiChevronLeft,
-  BiPrinter,
-  BiIdCard,
-  BiReset,
-  BiMenu,
   BiEdit,
+  BiMenu,
   BiPlus,
+  BiReset
 } from "react-icons/bi";
-import ICardForm from "../ICardForm";
+import { AllClass } from "../../Redux/Slice/ClassSlice";
 import { fetchAllIcards } from "../../Redux/Slice/IcardSlice";
 import { AllSection } from "../../Redux/Slice/SectionSlice";
-import { AllClass } from "../../Redux/Slice/ClassSlice";
-import { Dropdown } from "primereact/dropdown";
-import { DivideCircle } from "lucide";
+import ICardForm from "../ICardForm";
+import Loading from "../Loading";
 
 export default function ICard() {
   const navigate = useNavigate();
@@ -49,7 +46,6 @@ export default function ICard() {
   useLayoutEffect(() => {
     dispatch(fetchAllIcards(localStorage.getItem("schoolid"))).then((doc)=>{
       setFilterIcard(doc.payload.filter((item) => item.status == true));
-      console.log(doc.payload);
     });
     dispatch(AllClass(localStorage.getItem("schoolid")));
     dispatch(AllSection(localStorage.getItem("schoolid")));
@@ -99,7 +95,7 @@ export default function ICard() {
             <span className="text-white font-semibold text-xl">ICard List</span>
           </div>
           <div>
-            <Button onClick={() => setVisible2(true)}>
+            <Button onClick={() => setVisible2(true)} className="hidden">
               <BiMenu size={30} color="#fff" />
             </Button>
           </div>
