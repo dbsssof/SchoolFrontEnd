@@ -52,7 +52,7 @@ export default function Teacher({}) {
   useLayoutEffect(() => {
     dispatch(fetchAllIcards(localStorage.getItem("schoolid"))).then((doc) =>
       setFilterStudent(
-        doc.payload.filter(
+        doc.payload?.filter(
           (item) =>
             (item.status === true &&
               item.print === false &&

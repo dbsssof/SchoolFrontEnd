@@ -1,31 +1,28 @@
-import { Calendar } from "primereact/calendar";
-import No_Image from "./Assets/Image/NO_IMAGE.jpg";
 import Compressor from "compressorjs";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Calendar } from "primereact/calendar";
+import { Checkbox } from "primereact/checkbox";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
+import { ConfirmPopup } from "primereact/confirmpopup";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
+import { InputTextarea } from "primereact/inputtextarea";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AllClassBySchoolStatus } from "../Redux/Slice/ClassSlice";
 import {
   createIcard,
-  updateIcard,
-  addIcard,
-  upIcard,
+  updateIcard
 } from "../Redux/Slice/IcardSlice";
-import { Checkbox } from "primereact/checkbox";
-import { Dropdown } from "primereact/dropdown";
-import { InputTextarea } from "primereact/inputtextarea";
-import { InputNumber } from "primereact/inputnumber";
-import { FloatLabel } from "primereact/floatlabel";
-import { Dialog } from "primereact/dialog";
-import { AllClassBySchoolStatus } from "../Redux/Slice/ClassSlice";
 import { AllSectionBySchoolStatus } from "../Redux/Slice/SectionSlice";
+import No_Image from "./Assets/Image/NO_IMAGE.jpg";
 import Loading from "./Loading";
-import { useDispatch, useSelector } from "react-redux";
 
-import { BiCamera, BiSave, BiSync, BiMenu } from "react-icons/bi";
-import ImageCropper from "./ImageCropper2";
-import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import { BiCamera, BiMenu } from "react-icons/bi";
+import ImageCropper from "./ImageCropper2";
 
 export default function ICardForm({ item, label, visbile, disble }) {
   const [formData, setFormData] = useState({
@@ -193,7 +190,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
     });
   };
 
-  const onSave = (e) => {
+  const onSave = () => {
     disptch(
       createIcard({ ...formData, schoolid: localStorage.getItem("schoolid") })
     ).then((doc) => {
@@ -206,10 +203,10 @@ export default function ICardForm({ item, label, visbile, disble }) {
     });
   };
 
-  const onUpdate = (e) => {
+  const onUpdate = () => {
     disptch(
       updateIcard({ ...formData, school: localStorage.getItem("schoolid") })
-    ).then((doc) => {
+    ).then(() => {
       visbile();
     });
   };
@@ -232,7 +229,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
     if (event.target.files && event.target.files.length > 0) {
       const reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
-      reader.onload = function (e) {
+      reader.onload = function () {
         setImage(reader.result);
         setVisbileModel(true);
       };
@@ -587,7 +584,7 @@ export default function ICardForm({ item, label, visbile, disble }) {
         </form>
         <div className="flex flex-col justify-center">
           {label === "s" ? (
-            <button
+            <Button
               label="save"
               icon="pi pi-check"
               disabled={
@@ -599,11 +596,10 @@ export default function ICardForm({ item, label, visbile, disble }) {
                   ? false
                   : true
               }
+              loading={loading}
               onClick={onSave}
               className="flex items-center justify-center gap-2 bg-cyan-500 text-white py-3 px-36 my-2 disabled:bg-cyan-300"
-            >
-              <BiSave size={25} /> Save
-            </button>
+            ></Button>
           ) : (
             <Button
               label="update"

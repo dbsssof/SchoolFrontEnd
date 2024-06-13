@@ -13,6 +13,9 @@ axiosInstance.interceptors.request.use(
     if (Ttoken || Admintoken || Partytoken) {
       config.headers.Authorization = Ttoken || Admintoken || Partytoken;
     }
+    config.headers['Access-Control-Allow-Origin'] = '*'; // Allowing all origins
+    config.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'; // Allowing specific methods
+    config.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'; // Allowing specific headers
     return config;
   },
   (error) => {

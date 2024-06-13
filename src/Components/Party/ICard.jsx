@@ -1,7 +1,7 @@
 import { Dialog } from "primereact/dialog";
 import No_Image from "../Assets/Image/NO_IMAGE.jpg";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Ripple } from "primereact/ripple";
@@ -9,7 +9,7 @@ import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
+import { InputSwitch } from "primereact/inputswitch";
 
 import Loading from "../Loading";
 import {
@@ -17,41 +17,70 @@ import {
   BiPrinter,
   BiIdCard,
   BiReset,
+  BiMenu,
   BiEdit,
+  BiPlus,
 } from "react-icons/bi";
 import ICardForm from "../ICardForm";
 import { fetchAllIcards } from "../../Redux/Slice/IcardSlice";
 import { AllSection } from "../../Redux/Slice/SectionSlice";
 import { AllClass } from "../../Redux/Slice/ClassSlice";
 import { Dropdown } from "primereact/dropdown";
+import { DivideCircle } from "lucide";
 
 export default function ICard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [visible2, setVisible2] = useState(false);
+  const [imageFilter, setImageFilter] = useState(false);
+  const [studentFilter, setStudentFilter] = useState(false);
   const [selectOneStudent, setSelectOneStudent] = useState();
   const [label, setLable] = useState("");
-  const [filterIcard, setFilterIcard] = useState();
   const [searchInput, setSearchInput] = useState();
-
+  
   const [filterClass, setFilterClass] = useState("");
   const [filterSection, setFilterSection] = useState("");
   const { ICards, loading } = useSelector((state) => state.Icard);
   const { Classs } = useSelector((state) => state.Class);
   const { Sections } = useSelector((state) => state.Section);
+  const [filterIcard, setFilterIcard] = useState([]);
 
-  useEffect(() => {
-    dispatch(fetchAllIcards(localStorage.getItem("schoolid")));
+  useLayoutEffect(() => {
+    dispatch(fetchAllIcards(localStorage.getItem("schoolid"))).then((doc)=>{
+      setFilterIcard(doc.payload.filter((item) => item.status == true));
+      console.log(doc.payload);
+    });
     dispatch(AllClass(localStorage.getItem("schoolid")));
     dispatch(AllSection(localStorage.getItem("schoolid")));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (imageFilter) {
+      setFilterIcard(ICards.filter((item) => item.image === null));
+    } else {
+      setFilterIcard(
+        ICards.filter((item) => item.image !== null || undefined || "")
+      );
+    }
+  }, [imageFilter]);
+
+  useEffect(() => {
+    if (studentFilter) {
+      setFilterIcard(ICards.filter((item) => item.status === false));
+    }
+    if (!studentFilter) {
+      setFilterIcard(ICards.filter((item) => item.status === true));
+    }
+  }, [studentFilter]);
 
   const filterData = (item) => {
     return (
       (!filterClass || item.class === filterClass) &&
       (!filterSection || item.section === filterSection) &&
       (!searchInput ||
-       (item.name && item.name.toLowerCase().includes(searchInput.toLowerCase())) )// Step 2: Filter based on name
+        (item.name &&
+          item.name.toLowerCase().includes(searchInput.toLowerCase()))) // Step 2: Filter based on name
     );
   };
 
@@ -60,13 +89,20 @@ export default function ICard() {
     <>
       {loading && <Loading />}
 
-      <div className="w-full bg-red-500 p-3 flex ">
-        <div className="flex items-center gap-5">
-          <button onClick={() => navigate(-1)} className="p-ripple">
-            <BiChevronLeft color="#FFF" size={40} />
-            <Ripple />
-          </button>
-          <span className="text-white font-semibold text-xl">ICard List</span>
+      <div className="w-full bg-red-500 p-3">
+        <div className="flex justify-between items-center gap-5 w-fill">
+          <div className="flex gap=5 items-center">
+            <button onClick={() => navigate(-1)} className="p-ripple">
+              <BiChevronLeft color="#FFF" size={40} />
+              <Ripple />
+            </button>
+            <span className="text-white font-semibold text-xl">ICard List</span>
+          </div>
+          <div>
+            <Button onClick={() => setVisible2(true)}>
+              <BiMenu size={30} color="#fff" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -86,17 +122,22 @@ export default function ICard() {
       </Dialog>
 
       <div className="w-fill sticky z-40 bg-white top-0 left-0 right-0 p-3">
-        <div className="w-full flex flex-col justify-center mx-auto">
-          <div>
-            <button
-              className="bg-blue-500 px-3 py-2 w-full my-2 rounded-md text-white"
-              onClick={() => {
-                setLable("s");
-                setVisible(true);
-              }}
-            >
-              Create
-            </button>
+        <div className="w-full grid mx-auto">
+          <div className="flex gap-5 items-center py-3">
+            <span className="flex items-center gap-3">
+              <label>Status</label>
+              <InputSwitch
+                checked={studentFilter}
+                onChange={(e) => setStudentFilter(e.value)}
+              />
+            </span>
+            <span className="flex items-center gap-3">
+              <label>Image</label>
+              <InputSwitch
+                checked={imageFilter}
+                onChange={(e) => setImageFilter(e.value)}
+              />
+            </span>
           </div>
           <div className=" flex gap-3 w-full">
             <IconField iconPosition="right" className="w-full">
@@ -143,7 +184,7 @@ export default function ICard() {
               />
               <button
                 type="button"
-                className="p-ripple bg-blue-500 w-full max-w-16 py-3 rounded-md text-white"
+                className="p-ripple bg-blue-500 w-full max-w-16 py-2.5 rounded-md text-white"
                 onClick={() => {
                   setFilterClass("");
                   setFilterSection("");
@@ -156,10 +197,19 @@ export default function ICard() {
           </div>
         </div>
       </div>
-
+      <div>
+        <Button
+          icon={<BiPlus size={40} />}
+          className="absolute bottom-10 right-10 bg-blue-500 h-16 w-16 rounded-full text-white"
+          onClick={() => {
+            setLable("s");
+            setVisible(true);
+          }}
+        ></Button>
+      </div>
       <div className="flex justify-center">
         <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-          {ICards.filter(filterData).map((item, index) => (
+          {filterIcard.filter(filterData).map((item, index) => (
             <div
               key={index}
               className="icard shadow-gray-400 shadow-md m-2 relative border-gray-300 border"

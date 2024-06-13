@@ -103,6 +103,8 @@ export const ICard = createSlice({
     builder
       .addCase(fetchAllIcards.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.message = null;
       })
       .addCase(fetchAllIcards.fulfilled, (state, action) => {
         state.ICards = action.payload;
@@ -118,6 +120,8 @@ export const ICard = createSlice({
       })
       .addCase(createIcard.pending, (state) => {
         state.loading = false;
+        state.message = null;
+        state.error = null;
       })
       .addCase(createIcard.fulfilled, (state, action) => {
         state.error = null;
@@ -132,6 +136,8 @@ export const ICard = createSlice({
       })
       .addCase(updateIcard.pending, (state) => {
         state.loading = false;
+        state.message = null;
+        state.error = null;
       })
       .addCase(updateIcard.fulfilled, (state, action) => {
         const index = state.ICards.findIndex(
@@ -151,6 +157,9 @@ export const ICard = createSlice({
       })
       .addCase(updateManyIcards.pending, (state) => {
         state.loading = false;
+
+        state.message = null;
+        state.error = null;
       })
       .addCase(updateManyIcards.fulfilled, (state, action) => {
         for (let index = 0; index < action.payload.data.length; index++) {
@@ -166,6 +175,8 @@ export const ICard = createSlice({
       })
       .addCase(deleteIcard.pending, (state) => {
         state.loading = true;
+        state.message = null;
+        state.error = null;
       })
       .addCase(deleteIcard.fulfilled, (state, action) => {
         // Remove the deleted Icard from state
